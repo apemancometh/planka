@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-planka-dev-4bdaf-authRole",
+      "UnauthRoleArn": "arn:aws:iam::427004120763:role/amplify-planka-dev-4bdaf-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::427004120763:role/amplify-planka-dev-4bdaf-authRole",
+      "Region": "ap-southeast-2",
+      "DeploymentBucketName": "amplify-planka-dev-4bdaf-deployment",
+      "UnauthRoleName": "amplify-planka-dev-4bdaf-unauthRole",
+      "StackName": "amplify-planka-dev-4bdaf",
+      "StackId": "arn:aws:cloudformation:ap-southeast-2:427004120763:stack/amplify-planka-dev-4bdaf/a145e620-9ce2-11f0-bde6-069d7602b7cd",
+      "AmplifyAppId": "d2miib0rvgrz5s"
+    }
+  }
+}
