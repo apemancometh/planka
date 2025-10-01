@@ -1,17 +1,14 @@
 version: "3.8"
 services:
   planka:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: >-
-      bash -c "for i in `seq 1 30`; do node dist/server.js && s=0 && break || s=$? && echo \"Tried $i times. Waiting 5 secs...\"; sleep 5; done; (exit $s)"
+    # no build:, no image: (Amplify/ECS will inject the ECR image)
     ports: ["1337:1337"]
     environment:
       BASE_URL: "https://tasks.joshuascutts.com"
       DATABASE_URL: "postgresql://planka:1%24weX%25IaRsK3rv%2A8@planka-db-new.c32zqm4pnkzf.ap-southeast-2.rds.amazonaws.com:5432/planka?sslmode=require"
       SECRET_KEY: "91e35985d07c0daf775871500947abe4640b00327cbc4c41e773bcc65b4e01e2b2b80c901e9296189d66b7069d31fc583f18c63d849e662087e62496b117b7ac"
       TRUST_PROXY: "1"
+      # first boot only; remove after login
       DEFAULT_ADMIN_EMAIL: "admin@yourdomain.com"
       DEFAULT_ADMIN_PASSWORD: "ChangeMe123"
       DEFAULT_ADMIN_NAME: "Admin"
