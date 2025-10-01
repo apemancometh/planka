@@ -1,6 +1,6 @@
 {
   "api": {
-    "gatewayfargate": {
+    "plankaend": {
       "apiType": "REST",
       "build": true,
       "dependsOn": [
@@ -23,10 +23,11 @@
         "type": "CUSTOM"
       },
       "providerPlugin": "awscloudformation",
-      "resourceName": "gatewayfargate",
+      "resourceName": "plankaend",
       "restrictAccess": false,
       "service": "ElasticContainer",
       "skipHashing": false
     }
-  }
+  },
+  "auth": {}
 }

@@ -1,0 +1,19 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+  build:
+    commands:
+      - echo Pulling official Planka image...
+      - docker pull ghcr.io/plankanban/planka:latest
+      - docker tag ghcr.io/plankanban/planka:latest $planka_REPOSITORY_URI:latest
+  post_build:
+    commands:
+      - echo Pushing to ECR...
+      - docker push $planka_REPOSITORY_URI:latest
+      - printf '[{"name":"planka","imageUri":"%s"}]' $planka_REPOSITORY_URI:latest > imagedefinitions.json
+artifacts:
+  files:
+    - imagedefinitions.json
