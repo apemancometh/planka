@@ -1,6 +1,6 @@
 {
   "api": {
-    "plankaend": {
+    "plankaapi": {
       "apiType": "REST",
       "build": true,
       "dependsOn": [
@@ -23,11 +23,10 @@
         "type": "CUSTOM"
       },
       "providerPlugin": "awscloudformation",
-      "resourceName": "plankaend",
+      "resourceName": "plankaapi",
       "restrictAccess": false,
       "service": "ElasticContainer",
       "skipHashing": false
     }
-  },
-  "auth": {}
+  }
 }

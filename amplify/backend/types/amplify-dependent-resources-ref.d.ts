@@ -1,6 +1,6 @@
 export type AmplifyDependentResourcesAttributes = {
   "api": {
-    "plankaend": {
+    "plankaapi": {
       "ApiName": "string",
       "ClusterName": "string",
       "ContainerNames": "string",
