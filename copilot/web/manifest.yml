@@ -1,0 +1,34 @@
+# copilot/web/manifest.yml
+name: web
+type: Load Balanced Web Service
+
+http:
+  path: "/"
+  #alias:
+    #- tasks.joshuascutts.com
+  #certificates:
+  #  - arn:aws:acm:ap-southeast-2:427004120763:certificate/3c65de84-38f1-42de-8f93-46c9e7df944f
+  # healthcheck: "/"   # optional
+  #redirect_to_https: true
+
+
+image:
+  location: 427004120763.dkr.ecr.ap-southeast-2.amazonaws.com/amplify-planka-finalplank-14873-api-planka-planka:latest
+  port: 1337
+
+cpu: 256
+memory: 512
+count: 1
+exec: true
+
+variables:
+  BASE_URL: https://tasks.joshuascutts.com
+  TRUST_PROXY: "1"
+  PGSSLMODE: require
+  # If your image has the RDS bundle baked in, you can also add:
+  # NODE_EXTRA_CA_CERTS: /app/certs/rds-global-bundle.pem
+  # PGSSLROOTCERT: /app/certs/rds-global-bundle.pem
+
+secrets:
+  DATABASE_URL: /copilot/planka/prod/secrets/DATABASE_URL
+  SECRET_KEY:   /copilot/planka/prod/secrets/SECRET_KEY

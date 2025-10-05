@@ -38,5 +38,8 @@
     "genversion": "^3.2.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2"
+  },
+  "devDependencies": {
+    "@aws-amplify/backend-cli": "^1.8.0"
   }
 }

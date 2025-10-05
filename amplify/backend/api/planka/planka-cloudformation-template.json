@@ -95,7 +95,7 @@
           },
           "RoutingPolicy": "MULTIVALUE"
         },
-        "Name": "plankaapi"
+        "Name": "planka"
       }
     },
     "TaskDefinitionTaskRoleFD40A61D": {
@@ -129,23 +129,11 @@
               },
               {
                 "Name": "DATABASE_URL",
-                "Value": "postgresql://planka:1%24weX%25IaRsK3rv%2A8@planka-db-new.c32zqm4pnkzf.ap-southeast-2.rds.amazonaws.com:5432/planka?sslmode=require"
-              },
-              {
-                "Name": "SECRET_KEY",
-                "Value": "91e35985d07c0daf775871500947abe4640b00327cbc4c41e773bcc65b4e01e2b2b80c901e9296189d66b7069d31fc583f18c63d849e662087e62496b117b7ac"
+                "Value": "postgresql://planka:PlankaSecure2024DBPassword@planka-db-new.c32zqm4pnkzf.ap-southeast-2.rds.amazonaws.com:5432/planka?ssl=true"
               },
               {
                 "Name": "TRUST_PROXY",
                 "Value": "1"
-              },
-              {
-                "Name": "KNEX_REJECT_UNAUTHORIZED_SSL_CERTIFICATE",
-                "Value": "false"
-              },
-              {
-                "Name": "PGSSLMODE",
-                "Value": "require"
               },
               {
                 "Name": "DEFAULT_ADMIN_EMAIL",
@@ -165,7 +153,25 @@
               }
             ],
             "Essential": true,
-            "Image": "ghcr.io/plankanban/planka:latest",
+            "Image": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ".dkr.ecr.",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ".",
+                  {
+                    "Ref": "AWS::URLSuffix"
+                  },
+                  "/amplify-planka-finalplank-14873-api-planka-planka:latest"
+                ]
+              ]
+            },
             "LogConfiguration": {
               "LogDriver": "awslogs",
               "Options": {
@@ -201,7 +207,7 @@
               {
                 "Ref": "rootStackName"
               },
-              "-plankaapi"
+              "-planka"
             ]
           ]
         },
@@ -240,6 +246,39 @@
       "Properties": {
         "PolicyDocument": {
           "Statement": [
+            {
+              "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":ecr:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":repository/amplify-planka-finalplank-14873-api-planka-planka"
+                  ]
+                ]
+              }
+            },
+            {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*"
+            },
             {
               "Action": [
                 "logs:CreateLogStream",
@@ -293,7 +332,7 @@
               {
                 "Ref": "rootStackName"
               },
-              "-plankaapi-planka"
+              "-planka-planka"
             ]
           ]
         },
@@ -352,7 +391,7 @@
             }
           }
         },
-        "ServiceName": "plankaapi-service-planka-1337",
+        "ServiceName": "planka-service-planka-1337",
         "ServiceRegistries": [
           {
             "ContainerName": "planka",
@@ -778,7 +817,7 @@
             "CLUSTER_NAME": {
               "Ref": "NetworkStackClusterName"
             },
-            "SERVICE_NAME": "plankaapi-service-planka-1337"
+            "SERVICE_NAME": "planka-service-planka-1337"
           }
         },
         "Handler": "index.handler",
@@ -939,7 +978,7 @@
               {
                 "Ref": "rootStackName"
               },
-              "-plankaapi-service-planka-1337"
+              "-planka-service-planka-1337"
             ]
           ]
         },
@@ -1005,7 +1044,19 @@
                         {
                           "Ref": "AWS::AccountId"
                         },
-                        "\"}]"
+                        "\"},{\"name\":\"planka_REPOSITORY_URI\",\"type\":\"PLAINTEXT\",\"value\":\"",
+                        {
+                          "Ref": "AWS::AccountId"
+                        },
+                        ".dkr.ecr.",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        ".",
+                        {
+                          "Ref": "AWS::URLSuffix"
+                        },
+                        "/amplify-planka-finalplank-14873-api-planka-planka\"}]"
                       ]
                     ]
                   }
@@ -1071,7 +1122,7 @@
                   "ClusterName": {
                     "Ref": "NetworkStackClusterName"
                   },
-                  "ServiceName": "plankaapi-service-planka-1337"
+                  "ServiceName": "planka-service-planka-1337"
                 },
                 "InputArtifacts": [
                   {
@@ -2264,7 +2315,7 @@
               {
                 "Ref": "rootStackName"
               },
-              "-plankaapi"
+              "-planka"
             ]
           ]
         },
@@ -2327,7 +2378,7 @@
             ]
           }
         },
-        "Name": "plankaapiAuthorizer"
+        "Name": "plankaAuthorizer"
       },
       "Condition": "isAuthCondition"
     },
@@ -2391,7 +2442,7 @@
   },
   "Outputs": {
     "ServiceName": {
-      "Value": "plankaapi-service-planka-1337"
+      "Value": "planka-service-planka-1337"
     },
     "ClusterName": {
       "Value": {
@@ -2406,7 +2457,7 @@
             {
               "Ref": "rootStackName"
             },
-            "-plankaapi-service-planka-1337"
+            "-planka-service-planka-1337"
           ]
         ]
       }
@@ -2415,7 +2466,7 @@
       "Value": "planka"
     },
     "ApiName": {
-      "Value": "plankaapi"
+      "Value": "planka"
     },
     "RootUrl": {
       "Value": {

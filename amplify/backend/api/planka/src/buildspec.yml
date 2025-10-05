@@ -16,10 +16,14 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
+      - docker build -t $planka_REPOSITORY_URI:latest ./.
+      - docker tag $planka_REPOSITORY_URI:latest $planka_REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker images..
-      - "echo \"[]\" > imagedefinitions.json"
+      - docker push $planka_REPOSITORY_URI:latest
+      - docker push $planka_REPOSITORY_URI:$IMAGE_TAG
+      - "echo \"[{\\\"name\\\":\\\"planka\\\", \\\"imageUri\\\":\\\"$planka_REPOSITORY_URI\\\"}]\" > imagedefinitions.json"
 artifacts:
   files: imagedefinitions.json
