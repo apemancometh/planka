@@ -37,6 +37,7 @@ variables:
   SMTP_SECURE: "false"       # "true" if using port 465
   SMTP_FROM: "Tasks <josh@joshuascutts.com>"   # From address must be on a Mailgun-verified domain
   SMTP_NAME: "tasks.joshuascutts.com"          # optional EHLO/HELO name
+
   # If your image has the RDS bundle baked in, you can also add:
   # NODE_EXTRA_CA_CERTS: /app/certs/rds-global-bundle.pem
   # PGSSLROOTCERT: /app/certs/rds-global-bundle.pem
