@@ -31,3 +31,9 @@ server/private/*
 server/private/attachments/*
 
 client/dist
+
+!certs/
+!certs/rds-bundle.pem
+
+!assets/
+!assets/favicons/**

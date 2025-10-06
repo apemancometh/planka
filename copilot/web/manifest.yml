@@ -13,7 +13,9 @@ http:
 
 
 image:
-  location: 427004120763.dkr.ecr.ap-southeast-2.amazonaws.com/amplify-planka-finalplank-14873-api-planka-planka:latest
+  build:
+    dockerfile: ./Dockerfile
+    context: .
   port: 1337
 
 cpu: 256
@@ -23,8 +25,18 @@ exec: true
 
 variables:
   BASE_URL: https://tasks.joshuascutts.com
-  TRUST_PROXY: "1"
+  TRUST_PROXY: "true"
   PGSSLMODE: require
+  PGSSLROOTCERT: /app/certs/rds-bundle.pem
+  NODE_EXTRA_CA_CERTS: /app/certs/rds-bundle.pem
+  KNEX_REJECT_UNAUTHORIZED_SSL_CERTIFICATE: "false"
+  NODE_ENV: production
+
+  SMTP_HOST: smtp.mailgun.org
+  SMTP_PORT: "587"           # use "465" if you prefer implicit TLS
+  SMTP_SECURE: "false"       # "true" if using port 465
+  SMTP_FROM: "Tasks <josh@joshuascutts.com>"   # From address must be on a Mailgun-verified domain
+  SMTP_NAME: "tasks.joshuascutts.com"          # optional EHLO/HELO name
   # If your image has the RDS bundle baked in, you can also add:
   # NODE_EXTRA_CA_CERTS: /app/certs/rds-global-bundle.pem
   # PGSSLROOTCERT: /app/certs/rds-global-bundle.pem
@@ -32,3 +44,5 @@ variables:
 secrets:
   DATABASE_URL: /copilot/planka/prod/secrets/DATABASE_URL
   SECRET_KEY:   /copilot/planka/prod/secrets/SECRET_KEY
+  SMTP_USER: /copilot/planka/prod/secrets/SMTP_USER
+  SMTP_PASSWORD: /copilot/planka/prod/secrets/SMTP_PASSWORD
