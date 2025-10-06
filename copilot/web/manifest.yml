@@ -11,6 +11,7 @@ http:
   # healthcheck: "/"   # optional
   #redirect_to_https: true
 
+
 image:
   build:
     dockerfile: ./Dockerfile
