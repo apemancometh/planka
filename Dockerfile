@@ -1,5 +1,13 @@
-# ---------- Build stage ----------
-     FROM public.ecr.aws/docker/library/node:20-bullseye-slim AS build
+# syntax=docker/dockerfile:1.4
+
+# ---------- Build-time args (Copilot passes these) ----------
+     ARG NODE_IMAGE=public.ecr.aws/docker/library/node:20-bullseye-slim
+     ARG RDS_REGION=ap-southeast-2
+     ARG WITH_CLIENT=true
+     ARG PRUNE_SERVER_DEPS=true
+
+     # ---------- Build stage ----------
+     FROM ${NODE_IMAGE} AS build
      WORKDIR /app
 
      # Toolchain for native modules + Python venv for server postinstall
@@ -8,52 +16,55 @@
       && ln -sf /usr/bin/python3 /usr/local/bin/python \
       && rm -rf /var/lib/apt/lists/*
 
-     # Help node-gyp find Python (safe with npm v10+)
-     ENV PYTHON=/usr/bin/python3
-     ENV npm_config_python=/usr/bin/python3
-     # Keep pip lean inside the server’s venv created during postinstall
-     ENV PIP_NO_CACHE_DIR=1
+     ENV PYTHON=/usr/bin/python3 \
+         npm_config_python=/usr/bin/python3 \
+         PIP_NO_CACHE_DIR=1
 
-     # 1) copy lockfiles first so postinstall can run against them
+     # Copy lockfiles first so postinstall runs against them
      COPY package*.json ./
      COPY server/package*.json server/
      COPY client/package*.json client/
      COPY server/requirements.txt server/requirements.txt
 
-     # 2) install (root postinstall runs and installs server/client)
+     # Root postinstall installs server & client deps
      RUN npm ci
 
-     # 3) now bring in the rest of the source
+     # Optional client build controlled by arg
+     ARG WITH_CLIENT
+     RUN if [ "$WITH_CLIENT" = "true" ]; then npm run build --prefix client; fi
+
+     # Bring in the rest of the source
      COPY . .
 
-     # (optional) build client bundle if your app needs it
-     # RUN npm run build --prefix client
-
-
      # ---------- Runtime stage ----------
-     FROM public.ecr.aws/docker/library/node:20-bullseye-slim
+     FROM ${NODE_IMAGE} AS runtime
      WORKDIR /app
 
-     # Keep your RDS CA bundle (adjust region if needed)
+     # RDS CA bundle (region comes from build arg)
+     ARG RDS_REGION
      RUN install -d -m 0755 /app/certs \
       && apt-get update \
       && apt-get install -y --no-install-recommends ca-certificates curl \
       && rm -rf /var/lib/apt/lists/* \
-      && curl -fsSL https://truststore.pki.rds.amazonaws.com/ap-southeast-2/ap-southeast-2-bundle.pem \
+      && curl -fsSL "https://truststore.pki.rds.amazonaws.com/${RDS_REGION}/${RDS_REGION}-bundle.pem" \
            -o /app/certs/rds-bundle.pem \
       && chmod 0644 /app/certs/rds-bundle.pem
 
-     # Copy build output
+     # Copy app from build stage
      COPY --from=build /app /app
 
      ENV NODE_ENV=production
 
-     # Trim dev deps from server and clean npm cache for a smaller image
-     RUN npm_config_ignore_scripts=true npm prune --omit=dev --prefix server && npm cache clean --force
+     # Trim dev deps from server without running scripts (prevents node-gyp)
+     ARG PRUNE_SERVER_DEPS
+     RUN if [ "$PRUNE_SERVER_DEPS" = "true" ]; then \
+           npm --prefix server prune --omit=dev --ignore-scripts && npm cache clean --force ; \
+         fi
 
-     # (optional but recommended) run as non-root
+     # Non-root
      RUN chown -R node:node /app
      USER node
 
-     # Start the server (adjust if your start script differs)
+     # Ports & start
+     EXPOSE 1337
      CMD ["npm", "start", "--prefix", "server"]
