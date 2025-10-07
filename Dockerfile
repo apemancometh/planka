@@ -1,5 +1,5 @@
 # ---------- Build stage ----------
-     FROM node:20-bullseye-slim AS build
+     FROM public.ecr.aws/docker/library/node:20-bullseye-slim AS build
      WORKDIR /app
 
      # Toolchain for native modules + Python venv for server postinstall
@@ -19,6 +19,7 @@
      COPY server/package*.json server/
      COPY client/package*.json client/
      COPY server/requirements.txt server/requirements.txt
+
      # 2) install (root postinstall runs and installs server/client)
      RUN npm ci
 
@@ -30,7 +31,7 @@
 
 
      # ---------- Runtime stage ----------
-     FROM node:20-bullseye-slim
+     FROM public.ecr.aws/docker/library/node:20-bullseye-slim
      WORKDIR /app
 
      # Keep your RDS CA bundle (adjust region if needed)
@@ -49,6 +50,7 @@
 
      # Trim dev deps from server and clean npm cache for a smaller image
      RUN npm_config_ignore_scripts=true npm prune --omit=dev --prefix server && npm cache clean --force
+
      # (optional but recommended) run as non-root
      RUN chown -R node:node /app
      USER node
