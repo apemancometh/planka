@@ -4,6 +4,15 @@ type: Load Balanced Web Service
 
 http:
   path: "/"
+  healthcheck:
+    path: "/healthz"
+    success_codes: "200-399"
+    interval: 10s
+    timeout: 5s
+    healthy_threshold: 2
+    unhealthy_threshold: 5
+    grace_period: 120s
+
   #alias:
   # - tasks.joshuascutts.com
   #certificates:
