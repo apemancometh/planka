@@ -12,7 +12,7 @@
     "postinstall": "patch-package && npm run setup-python",
     "lint": "eslint . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
     "setup-python": "python3 -m venv .venv && .venv/bin/pip3 install -r requirements.txt",
-    "start": "nodemon app.js",
+    "start": "nodemon",
     "start:prod": "cross-env NODE_ENV=production node app.js --prod",
     "test": "mocha test/lifecycle.test.js test/integration/**/*.test.js test/utils/**/*.test.js"
   },

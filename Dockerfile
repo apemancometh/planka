@@ -50,6 +50,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
      # Start the API
+<<<<<<< HEAD
      CMD ["npm", "run", "start:prod", "--prefix", "server"]
 =======
 =======
@@ -65,3 +66,6 @@
      # Start the server (adjust if your start script differs)
      CMD ["npm", "start", "--prefix", "server"]
 >>>>>>> parent of fa93c71f (Update Dockerfile)
+=======
+     CMD ["npm", "start", "--prefix", "server"]
+>>>>>>> parent of 6ac36e00 (YER)
