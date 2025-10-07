@@ -2,13 +2,13 @@
 FROM node:20-bullseye-slim AS build
 WORKDIR /app
 
-# Native module toolchain for node-gyp (needed by server deps like lodepng)
+# Native module toolchain + Python venv support for server postinstall
 RUN apt-get update \
- && apt-get install -y --no-install-recommends python3 make g++ \
+ && apt-get install -y --no-install-recommends python3 python3-venv make g++ \
  && ln -sf /usr/bin/python3 /usr/local/bin/python \
  && rm -rf /var/lib/apt/lists/*
 
-# Tell node-gyp where Python is (works with npm v10+)
+# Help node-gyp find Python (safe with npm v10+)
 ENV PYTHON=/usr/bin/python3
 ENV npm_config_python=/usr/bin/python3
 
