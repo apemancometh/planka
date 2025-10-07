@@ -15,26 +15,45 @@ const express = require('express');
 
 module.exports.http = {
   middleware: {
-    // Serve the Vite build output from client/dist
+    // Serve built SPA assets
     dist: (function () {
-      // __dirname === /app/server/config at runtime
       const distPath = path.resolve(__dirname, '../../client/dist');
       return express.static(distPath, { index: false, maxAge: '1h' });
     })(),
 
+    // Minimal CORS middleware (handles preflight + sets headers)
+    corsHeaders: function corsHeaders(req, res, next) {
+      const origin = req.headers.origin;
+      // If you only serve the SPA from the same origin, allow just that.
+      // Otherwise, fall back to echoing the Origin (with Vary) for credentialed requests.
+      if (origin) {
+        res.set('Access-Control-Allow-Origin', origin);
+        res.set('Vary', 'Origin');
+      } else {
+        res.set('Access-Control-Allow-Origin', '*');
+      }
+      res.set('Access-Control-Allow-Credentials', 'true');
+      res.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+      res.set(
+        'Access-Control-Allow-Headers',
+        req.headers['access-control-request-headers'] || 'content-type, authorization, x-requested-with'
+      );
+      if (req.method === 'OPTIONS') return res.sendStatus(204);
+      return next();
+    },
+
     poweredBy: false,
 
-    // Ensure our static middleware runs BEFORE Sails' router
     order: [
       'cookieParser',
       'session',
       'bodyParser',
       'compress',
       'poweredBy',
-      'dist',     // <— serve JS/CSS/fonts/images from client/dist
+      'corsHeaders', // <— CORS headers & preflight
+      'dist',        // <— static SPA assets
       'router',
       'favicon',
-      // (omit 'www' because we’re not using .tmp/public)
     ],
   },
 };
