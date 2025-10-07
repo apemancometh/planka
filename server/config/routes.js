@@ -248,7 +248,14 @@ module.exports.routes = {
   },
 
   'GET /*': {
-    view: 'index',
     skipAssets: true,
+    fn: function (req, res) {
+      // Let real API endpoints (e.g. /api/*) 404 through Sails if unknown
+      if (req.url.startsWith('/api')) {
+        return res.notFound();
+      }
+      const indexFile = path.resolve(__dirname, '../../client/dist/index.html');
+      return res.sendFile(indexFile);
+    },
   },
 };

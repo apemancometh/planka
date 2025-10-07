@@ -9,46 +9,32 @@
  * https://sailsjs.com/config/http
  */
 
-module.exports.http = {
-  /**
-   *
-   * Sails/Express middleware to run for every HTTP request.
-   * (Only applies to HTTP requests -- not virtual WebSocket requests.)
-   *
-   * https://sailsjs.com/documentation/concepts/middleware
-   *
-   */
+const path = require('path');
+const express = require('express');
 
+
+module.exports.http = {
   middleware: {
-    /**
-     *
-     * The order in which middleware should be run for HTTP requests.
-     * (This Sails app's routes are handled by the "router" middleware below.)
-     *
-     */
-    // order: [
-    //   'cookieParser',
-    //   'session',
-    //   'bodyParser',
-    //   'compress',
-    //   'poweredBy',
-    //   'router',
-    //   'www',
-    //   'favicon',
-    // ],
-    /**
-     *
-     * The body parser that will handle incoming multipart HTTP requests.
-     *
-     * https://sailsjs.com/config/http#?customizing-the-body-parser
-     *
-     */
-    // bodyParser: (function _configureBodyParser(){
-    //   var skipper = require('skipper');
-    //   var middlewareFn = skipper({ strict: true });
-    //   return middlewareFn;
-    // })(),
+    // Serve the Vite build output from client/dist
+    dist: (function () {
+      // __dirname === /app/server/config at runtime
+      const distPath = path.resolve(__dirname, '../../client/dist');
+      return express.static(distPath, { index: false, maxAge: '1h' });
+    })(),
 
     poweredBy: false,
+
+    // Ensure our static middleware runs BEFORE Sails' router
+    order: [
+      'cookieParser',
+      'session',
+      'bodyParser',
+      'compress',
+      'poweredBy',
+      'dist',     // <— serve JS/CSS/fonts/images from client/dist
+      'router',
+      'favicon',
+      // (omit 'www' because we’re not using .tmp/public)
+    ],
   },
 };
