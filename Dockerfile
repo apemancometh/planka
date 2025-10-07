@@ -48,8 +48,7 @@
      ENV NODE_ENV=production
 
      # Trim dev deps from server and clean npm cache for a smaller image
-     RUN npm prune --omit=dev --prefix server && npm cache clean --force
-
+     RUN npm_config_ignore_scripts=true npm prune --omit=dev --prefix server && npm cache clean --force
      # (optional but recommended) run as non-root
      RUN chown -R node:node /app
      USER node
