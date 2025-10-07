@@ -48,7 +48,7 @@ COPY --from=build /app/client/dist /app/client/dist
 COPY --from=build /app/assets /app/assets
 COPY --from=build /app/package*.json /app/
 
-ENV NODE_ENV=production
+ENV NODE_ENV=production HOST=0.0.0.0 PORT=1337
 EXPOSE 1337
 WORKDIR /app/server
 CMD ["npm", "run", "start:prod"]
