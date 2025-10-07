@@ -5,10 +5,12 @@ WORKDIR /app
 # Native module toolchain for node-gyp (needed by server deps like lodepng)
 RUN apt-get update \
  && apt-get install -y --no-install-recommends python3 make g++ \
- && ln -sf /usr/bin/python3 /usr/bin/python \
- && npm config set python /usr/bin/python3 \
+ && ln -sf /usr/bin/python3 /usr/local/bin/python \
  && rm -rf /var/lib/apt/lists/*
-# --- end block ---
+
+# Tell node-gyp where Python is (works with npm v10+)
+ENV PYTHON=/usr/bin/python3
+ENV npm_config_python=/usr/bin/python3
 
 
 # 1) copy lockfiles up front so postinstall can find them
