@@ -45,7 +45,7 @@ COPY --from=build /app/client/dist /app/client/dist
 # EITHER keep this (if .dockerignore allows assets)...
 # COPY --from=build /app/assets /app/assets
 # ...OR copy from context:
-COPY assets/ /app/assets/
+COPY --from=build /app/assets /app/assets
 COPY --from=build /app/package*.json /app/
 
 ENV NODE_ENV=production
