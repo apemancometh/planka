@@ -2,6 +2,15 @@
 FROM node:20-bullseye-slim AS build
 WORKDIR /app
 
+# Native module toolchain for node-gyp (needed by server deps like lodepng)
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends python3 make g++ \
+ && ln -sf /usr/bin/python3 /usr/bin/python \
+ && npm config set python /usr/bin/python3 \
+ && rm -rf /var/lib/apt/lists/*
+# --- end block ---
+
+
 # 1) copy lockfiles up front so postinstall can find them
 COPY package*.json ./
 COPY server/package*.json server/
