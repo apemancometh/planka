@@ -33,7 +33,8 @@ Thumbs.db
 
 # (Optional) repo-only stuff not needed at runtime
 charts
-assets
+!assets
+!assets/**
 
 # IMPORTANT: do NOT ignore these — they must be sent to the build:
 # - overlay/            (your overrides copied into the image)

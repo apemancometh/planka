@@ -16,7 +16,8 @@ image:
   build:
     dockerfile: ./Dockerfile
     context: .
-  port: 1337
+
+port: 1337
 
 cpu: 256
 memory: 512
@@ -31,6 +32,8 @@ variables:
   NODE_EXTRA_CA_CERTS: /app/certs/rds-bundle.pem
   KNEX_REJECT_UNAUTHORIZED_SSL_CERTIFICATE: "false"
   NODE_ENV: production
+  PORT: 1337
+  HOST: 0.0.0.0
 
   SMTP_HOST: smtp.mailgun.org
   SMTP_PORT: "587"           # use "465" if you prefer implicit TLS
