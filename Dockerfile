@@ -18,7 +18,7 @@
      COPY package*.json ./
      COPY server/package*.json server/
      COPY client/package*.json client/
-
+     COPY server/requirements.txt server/requirements.txt
      # 2) install (root postinstall runs and installs server/client)
      RUN npm ci
 
