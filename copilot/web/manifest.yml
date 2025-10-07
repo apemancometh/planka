@@ -15,11 +15,6 @@ http:
 image:
   build:
     dockerfile: ./Dockerfile
-    args:
-      NODE_IMAGE: public.ecr.aws/docker/library/node:20-bullseye-slim
-      RDS_REGION: ap-southeast-2
-      WITH_CLIENT: "true"
-      PRUNE_SERVER_DEPS: "true"
     context: .
   port: 1337
 
