@@ -19,6 +19,36 @@
     width: 100%;
   }
 
+  .descriptionWrapperOverlay {
+    align-items: center;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+  }
+
+  .descriptionTitle {
+    color: #fff;
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  }
+
+  .descriptionSubtitle {
+    color: #fff;
+    font-size: 24px;
+    font-weight: normal;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  }
+
   .divider {
     font-weight: normal;
   }

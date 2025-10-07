@@ -1,39 +1,42 @@
-*/README.md
-*/.gitignore
-*/node_modules
+# VCS / IDE
+.git
+.gitignore
+.github
+.vscode
+.idea
 
-**/.DS_Store
+# Node junk
+**/node_modules
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+**/*.log
 
-server/**/.gitkeep
-
-server/.env
-server/.editorconfig
-server/.eslintignore
-server/.npmrc
-server/test
-server/logs
-server/.venv
-server/.tmp
-
-server/views/*
-
-server/public/*
-!server/public/preloaded-favicons
-!server/public/favicons
-server/public/favicons/*
-!server/public/user-avatars
-server/public/user-avatars/*
-!server/public/background-images
-server/public/background-images/*
-
-server/private/*
-!server/private/attachments
-server/private/attachments/*
-
+# Builds & caches (we build inside the image)
 client/dist
+server/.tmp
+server/logs
+coverage
 
-!certs/
-!certs/rds-bundle.pem
+# Local env/secrets (Copilot injects env; don't bake these)
+.env
+*.env
+server/.env
 
-!assets/
-!assets/favicons/**
+# Docker / compose files not needed in image
+docker-compose*.yml
+Dockerfile.dev
+
+# OS cruft
+**/.DS_Store
+Thumbs.db
+
+# (Optional) repo-only stuff not needed at runtime
+charts
+assets
+
+# IMPORTANT: do NOT ignore these — they must be sent to the build:
+# - overlay/            (your overrides copied into the image)
+# - client/src/**       (source to build)
+# - server/**           (migrations, views, code)
+# - certs/**            (if you vendor a PEM instead of curl in Dockerfile)

@@ -271,6 +271,10 @@ const Content = React.memo(() => {
           className={classNames(styles.cover, styles.fullHeight)}
         >
           <div className={styles.coverOverlay} />
+          <div className={styles.descriptionWrapperOverlay}>
+            <Header as="h1" textAlign="center" content="Tasks - JS" className={styles.descriptionTitle} />
+            <Header as="h2" textAlign="center" content="Project Management" className={styles.descriptionSubtitle} />
+          </div>
         </Grid.Column>
       </Grid>
       {step === AccessTokenSteps.ACCEPT_TERMS && <TermsModal />}
