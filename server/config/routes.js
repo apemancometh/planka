@@ -230,6 +230,13 @@ module.exports.routes = {
     skipAssets: false,
   },
 
+  'GET /healthz': {
+    fn: async function (req, res) {
+      return res.status(200).send('ok'); // no DB, no auth, always 200
+    },
+  },
+
+
   'GET /attachments/:id/download/:filename': {
     action: 'file-attachments/download',
     skipAssets: false,

@@ -18,10 +18,6 @@ module.exports.http = {
    * https://sailsjs.com/documentation/concepts/middleware
    *
    */
-  customMiddleware: function (app) {
-    app.get('/healthz', (req, res) => res.status(200).send('OK'));
-
-  },
 
   middleware: {
     /**
