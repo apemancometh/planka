@@ -4,9 +4,11 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "postinstall": "patch-package",
+    "postinstall": "patch-package || echo \"[client] no patches to apply\"",
     "lint": "eslint --ext js,jsx src --report-unused-disable-directives",
+    "dev": "vite",
     "start": "vite",
+    "start:prod": "vite preview --host --port 5173 --strictPort",
     "test": "jest",
     "test:acceptance": "cucumber-js --import tests/acceptance/cucumber.conf.js --import tests/acceptance/steps/**/*.js --format @cucumber/pretty-formatter tests"
   },

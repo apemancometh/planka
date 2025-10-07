@@ -55,4 +55,4 @@
 
      ENV NODE_ENV=production
      # Start the API
-     CMD ["npm", "start", "--prefix", "server"]
+     CMD ["npm", "run", "start:prod", "--prefix", "server"]
