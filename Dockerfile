@@ -55,9 +55,12 @@
 
      ENV NODE_ENV=production
 <<<<<<< HEAD
+<<<<<<< HEAD
      # Start the API
      CMD ["npm", "run", "start:prod", "--prefix", "server"]
 =======
+=======
+>>>>>>> parent of fa93c71f (Update Dockerfile)
 
      # Trim dev deps from server without running scripts (prevents node-gyp)
      ARG PRUNE_SERVER_DEPS
