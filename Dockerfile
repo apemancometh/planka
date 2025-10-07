@@ -1,58 +1,75 @@
-# ---------- Build stage ----------
-     FROM public.ecr.aws/docker/library/node:20-bullseye-slim AS build
+# syntax=docker/dockerfile:1.4
+
+# ---------- Build-time args (Copilot passes these) ----------
+     ARG NODE_IMAGE=public.ecr.aws/docker/library/node:20-bullseye-slim
+     ARG RDS_REGION=ap-southeast-2
+     ARG WITH_CLIENT=true
+     ARG PRUNE_SERVER_DEPS=true
+
+     # ---------- Build stage ----------
+     FROM ${NODE_IMAGE} AS build
      WORKDIR /app
 
-     # Toolchain for node-gyp + Python venv (server postinstall)
+     # Toolchain for native modules + Python venv for server postinstall
      RUN apt-get update \
       && apt-get install -y --no-install-recommends python3 python3-venv make g++ \
       && ln -sf /usr/bin/python3 /usr/local/bin/python \
       && rm -rf /var/lib/apt/lists/*
 
-     # Help node-gyp find Python
-     ENV PYTHON=/usr/bin/python3
-     ENV npm_config_python=/usr/bin/python3
-     # Skip husky during Docker builds (no .git available)
-     ENV HUSKY=0
+     ENV PYTHON=/usr/bin/python3 \
+         npm_config_python=/usr/bin/python3 \
+         PIP_NO_CACHE_DIR=1
 
-     # 1) Copy lockfiles first
+     # Copy lockfiles first so postinstall runs against them
      COPY package*.json ./
      COPY server/package*.json server/
-     COPY server/requirements.txt server/requirements.txt
      COPY client/package*.json client/
+     COPY server/requirements.txt server/requirements.txt
 
-     # 2) Install deps explicitly per package (don't rely on root postinstall)
-     RUN npm ci --prefix server
-     RUN npm ci --prefix client
+     # Root postinstall installs server & client deps
+     RUN npm ci
 
-     # 3) Bring the rest of the source
-     COPY . .
-
-     # 4) (Optional) Build the client bundle
-     ARG WITH_CLIENT=true
+     # Optional client build controlled by arg
+     ARG WITH_CLIENT
      RUN if [ "$WITH_CLIENT" = "true" ]; then npm run build --prefix client; fi
 
-     # 5) Prune server deps to production size
-     RUN npm ci --prefix server --omit=dev
+     # Bring in the rest of the source
+     COPY . .
 
      # ---------- Runtime stage ----------
-     FROM public.ecr.aws/docker/library/node:20-bullseye-slim
+     FROM ${NODE_IMAGE} AS runtime
      WORKDIR /app
 
-     # Keep your RDS CA bundle
+     # RDS CA bundle (region comes from build arg)
+     ARG RDS_REGION
      RUN install -d -m 0755 /app/certs \
       && apt-get update \
       && apt-get install -y --no-install-recommends ca-certificates curl \
       && rm -rf /var/lib/apt/lists/* \
-      && curl -fsSL "https://truststore.pki.rds.amazonaws.com/ap-southeast-2/ap-southeast-2-bundle.pem" \
+      && curl -fsSL "https://truststore.pki.rds.amazonaws.com/${RDS_REGION}/${RDS_REGION}-bundle.pem" \
            -o /app/certs/rds-bundle.pem \
       && chmod 0644 /app/certs/rds-bundle.pem
 
-     # Copy only what we need at runtime
-     COPY --from=build /app/server /app/server
-     # If you build the client, copy the built assets too
-     COPY --from=build /app/client/dist /app/client/dist
-     COPY --from=build /app/package*.json /app/
+     # Copy app from build stage
+     COPY --from=build /app /app
 
      ENV NODE_ENV=production
+<<<<<<< HEAD
      # Start the API
      CMD ["npm", "run", "start:prod", "--prefix", "server"]
+=======
+
+     # Trim dev deps from server without running scripts (prevents node-gyp)
+     ARG PRUNE_SERVER_DEPS
+     RUN if [ "$PRUNE_SERVER_DEPS" = "true" ]; then \
+           npm --prefix server prune --omit=dev --ignore-scripts && npm cache clean --force ; \
+         fi
+
+     # Non-root
+     RUN chown -R node:node /app
+     USER node
+
+     # Ports & start
+     EXPOSE 1337
+     CMD ["npm", "start", "--prefix", "server"]
+>>>>>>> parent of fa93c71f (Update Dockerfile)
