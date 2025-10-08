@@ -14,7 +14,7 @@ export default {
       or: 'Oder',
       pageNotFound_title: 'Seite nicht gefunden',
       password: 'Passwort',
-      poweredByPlanka: 'Powered by <1>PLANKA</1>',
+      poweredByPlanka: 'Powered by <1>TASKS - JS</1>',
       serverConnectionFailed: 'Serververbindung fehlgeschlagen',
       unknownError: 'Unbekannter Fehler, bitte später erneut versuchen',
       useSingleSignOn: 'Einmalige Anmeldung (SSO) verwenden',
