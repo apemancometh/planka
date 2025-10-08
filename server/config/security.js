@@ -29,8 +29,8 @@ module.exports.security = {
 
   cors: {
     allRoutes: true,
-    allowOrigins: ['http://localhost:3000'],
-    allowRequestHeaders: ['Authorization'],
+    allowOrigins: ['http://localhost:3000', 'https://tasks.joshuascutts.com'],
+    allowRequestHeaders: ['content-type', 'authorization', 'x-requested-with'],
     allowCredentials: true,
   },
 
