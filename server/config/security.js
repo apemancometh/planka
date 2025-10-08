@@ -29,10 +29,9 @@ module.exports.security = {
 
   cors: {
     allRoutes: true,
-    allowOrigins: 'https://tasks.joshuascutts.com', // must be explicit if credentials are used
+    allowOrigins: ['http://localhost:3000'],
+    allowRequestHeaders: ['Authorization'],
     allowCredentials: true,
-    allowRequestMethods: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
-    allowRequestHeaders: 'content-type, authorization, x-requested-with',
   },
 
   /**
