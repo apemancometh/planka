@@ -24,7 +24,6 @@ module.exports = {
     },
     expiresAt: {
       type: 'ref',
-      allowNull: true,
       description: 'Optional expiration date',
     },
     permissions: {
