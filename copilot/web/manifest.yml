@@ -60,3 +60,19 @@ secrets:
   SECRET_KEY:   /copilot/planka/prod/secrets/SECRET_KEY
   SMTP_USER: /copilot/planka/prod/secrets/SMTP_USER
   SMTP_PASSWORD: /copilot/planka/prod/secrets/SMTP_PASSWORD
+
+# Persist uploads so avatars/backgrounds/attachments survive new tasks
+storage:
+  volumes:
+    avatars:
+      path: /app/public/user-avatars
+      read_only: false
+      efs: true
+    project-backgrounds:
+      path: /app/public/project-background-images
+      read_only: false
+      efs: true
+    attachments:
+      path: /app/private/attachments
+      read_only: false
+      efs: true

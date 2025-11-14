@@ -2,6 +2,11 @@
 FROM public.ecr.aws/docker/library/node:20-bullseye-slim AS build
 WORKDIR /app
 
+# after WORKDIR /app in the runtime stage
+RUN mkdir -p /app/public/user-avatars \
+             /app/public/project-background-images \
+             /app/private/attachments
+
 RUN apt-get update \
  && apt-get install -y --no-install-recommends python3 python3-venv make g++ \
  && ln -sf /usr/bin/python3 /usr/local/bin/python \
