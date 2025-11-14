@@ -48,8 +48,8 @@
  *         description: Card not found
  */
 
-const { isDueDate, isStopwatch } = require('../../../utils/validators');
-const { idInput } = require('../../../utils/inputs');
+const { isDueDate, isStopwatch } = require('../../../../../utils/validators');
+const { idInput } = require('../../../../../utils/inputs');
 
 const Errors = {
   NOT_AUTHENTICATED: {
