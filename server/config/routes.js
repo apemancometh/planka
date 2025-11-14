@@ -190,6 +190,17 @@ module.exports.routes = {
   'POST /api/notification-services/:id/test': 'notification-services/test',
   'DELETE /api/notification-services/:id': 'notification-services/delete',
 
+  // External API endpoints
+  'GET /api/external/boards': 'external/boards-index',
+  'GET /api/external/boards/:boardId': 'external/boards-show',
+  'GET /api/external/cards/:cardId': 'external/cards-show',
+  'POST /api/external/cards': 'external/cards-create',
+  'PATCH /api/external/cards/:cardId': 'external/cards-update',
+  'DELETE /api/external/cards/:cardId': 'external/cards-delete',
+  'GET /api/external/api-keys': 'external/api-keys-index',
+  'POST /api/external/api-keys': 'external/api-keys-create',
+  'DELETE /api/external/api-keys/:keyId': 'external/api-keys-delete',
+
   'GET /preloaded-favicons/*': {
     fn: staticDirServer('/preloaded-favicons', () =>
       path.join(

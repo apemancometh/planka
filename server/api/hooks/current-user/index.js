@@ -50,6 +50,19 @@ module.exports = function defineCurrentUserHook(sails) {
     };
   };
 
+  const getApiKeyAndUser = async (apiKey) => {
+    const result = await sails.helpers.apiKeys.validateKey(apiKey);
+
+    if (!result) {
+      return null;
+    }
+
+    return {
+      apiKey: result.apiKey,
+      user: result.user,
+    };
+  };
+
   return {
     /**
      * Runs when this Sails app loads/lifts.
@@ -63,9 +76,27 @@ module.exports = function defineCurrentUserHook(sails) {
       before: {
         '/api/*': {
           async fn(req, res, next) {
-            const { authorization: authorizationHeader } = req.headers;
+            const { authorization: authorizationHeader, 'x-api-key': apiKeyHeader } = req.headers;
 
-            if (authorizationHeader && TOKEN_PATTERN.test(authorizationHeader)) {
+            // Check for API key authentication first
+            if (apiKeyHeader) {
+              const apiKeyAndUser = await getApiKeyAndUser(apiKeyHeader);
+
+              if (apiKeyAndUser) {
+                const { apiKey, user } = apiKeyAndUser;
+
+                if (user.language) {
+                  req.setLocale(user.language);
+                }
+
+                Object.assign(req, {
+                  currentApiKey: apiKey,
+                  currentUser: user,
+                  isExternalApi: true, // Flag to indicate API key authentication
+                });
+              }
+            } else if (authorizationHeader && TOKEN_PATTERN.test(authorizationHeader)) {
+              // Fall back to Bearer token authentication
               const accessToken = authorizationHeader.replace(TOKEN_PATTERN, '');
               const { internalAccessToken } = sails.config.custom;
 
