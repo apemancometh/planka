@@ -8,6 +8,7 @@
  *
  * @description :: Model for external API authentication keys
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
+ * @updated     :: 2025-11-14 - Fixed ref type validation
  */
 
 module.exports = {
