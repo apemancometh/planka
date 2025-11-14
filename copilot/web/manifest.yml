@@ -17,6 +17,7 @@ http:
   #certificates:
   # - arn:aws:acm:ap-southeast-2:427004120763:certificate/3c65de84-38f1-42de-8f93-46c9e7df944f
   #redirect_to_https: true
+
 image:
   build:
     dockerfile: ./Dockerfile
