@@ -43,7 +43,6 @@ module.exports = {
     expiresAt: {
       type: 'ref',
       columnName: 'expires_at',
-      allowNull: true,
       description: 'Optional expiration date for the key',
     },
     isActive: {

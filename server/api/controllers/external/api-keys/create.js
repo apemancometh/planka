@@ -75,7 +75,6 @@ module.exports = {
     },
     expiresAt: {
       type: 'ref',
-      allowNull: true,
     },
     permissions: {
       type: 'json',
