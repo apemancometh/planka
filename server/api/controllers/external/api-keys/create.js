@@ -96,8 +96,8 @@ module.exports = {
       throw Errors.NOT_AUTHENTICATED;
     }
 
-    const result = await sails.helpers.apiKeys.generateKey({
-      userId: currentUser.id,
+    const result = await sails.helpers.apiKeys.generateKey.with({
+      userId: currentUser.id.toString(),
       name: inputs.name,
       description: inputs.description,
       expiresAt: inputs.expiresAt,
