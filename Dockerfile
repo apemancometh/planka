@@ -23,6 +23,7 @@ RUN npm ci \
  && npm ci --prefix client
 
 # Bring in the rest of the source
+# Cache bust: 2025-11-14-17:10
 COPY . .
 
 # Build client bundle
