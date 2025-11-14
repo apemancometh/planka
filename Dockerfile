@@ -42,13 +42,17 @@ RUN install -d -m 0755 /app/certs \
 # Copy build outputs
 COPY --from=build /app/server /app/server
 COPY --from=build /app/client/dist /app/client/dist
-# EITHER keep this (if .dockerignore allows assets)...
-# COPY --from=build /app/assets /app/assets
-# ...OR copy from context:
 COPY --from=build /app/assets /app/assets
 COPY --from=build /app/package*.json /app/
 
+# --- NEW: entrypoint to link EFS dirs on every boot ---
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
+ && mkdir -p /app/public /app/private
+
 ENV NODE_ENV=production HOST=0.0.0.0 PORT=1337
 EXPOSE 1337
+
 WORKDIR /app/server
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["npm", "run", "start:prod"]
