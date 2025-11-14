@@ -15,6 +15,16 @@ module.exports = {
   tableName: 'api_key',
 
   attributes: {
+    createdAt: {
+      type: 'ref',
+      columnName: 'created_at',
+      autoCreatedAt: true,
+    },
+    updatedAt: {
+      type: 'ref',
+      columnName: 'updated_at',
+      autoUpdatedAt: true,
+    },
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
