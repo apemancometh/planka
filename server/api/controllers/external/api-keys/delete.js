@@ -28,7 +28,7 @@
  *         description: API key not found
  */
 
-const { idInput } = require('../../../../../utils/inputs');
+const { idInput } = require('../../../../utils/inputs');
 
 const Errors = {
   NOT_AUTHENTICATED: {
