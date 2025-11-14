@@ -12,20 +12,38 @@ http:
     healthy_threshold: 2
     unhealthy_threshold: 5
     grace_period: 120s
-
   #alias:
   # - tasks.joshuascutts.com
   #certificates:
   # - arn:aws:acm:ap-southeast-2:427004120763:certificate/3c65de84-38f1-42de-8f93-46c9e7df944f
-  # healthcheck: "/"   # optional
   #redirect_to_https: true
-
 
 image:
   build:
     dockerfile: ./Dockerfile
     context: .
   port: 1337
+  command:
+    - sh
+    - -lc
+    - |
+      set -e
+      mkdir -p /data/user-avatars /data/project-background-images /data/attachments
+      # one-time migration if folders exist as real dirs (not symlinks)
+      for d in user-avatars project-background-images; do
+        if [ -d "/app/public/$d" ] && [ ! -L "/app/public/$d" ]; then
+          cp -R /app/public/$d/* "/data/$d/" 2>/dev/null || true
+          rm -rf "/app/public/$d"
+        fi
+      done
+      if [ -d "/app/private/attachments" ] && [ ! -L "/app/private/attachments" ]; then
+        cp -R /app/private/attachments/* /data/attachments/ 2>/dev/null || true
+        rm -rf /app/private/attachments
+      fi
+      ln -sfn /data/user-avatars /app/public/user-avatars
+      ln -sfn /data/project-background-images /app/public/project-background-images
+      ln -sfn /data/attachments /app/private/attachments
+      npm run start:prod
 
 port: 1337
 
@@ -46,10 +64,10 @@ variables:
   HOST: 0.0.0.0
 
   SMTP_HOST: smtp.mailgun.org
-  SMTP_PORT: "587"           # use "465" if you prefer implicit TLS
-  SMTP_SECURE: "false"       # "true" if using port 465
-  SMTP_FROM: "Tasks <josh@joshuascutts.com>"   # From address must be on a Mailgun-verified domain
-  SMTP_NAME: "tasks.joshuascutts.com"          # optional EHLO/HELO name
+  SMTP_PORT: "587"
+  SMTP_SECURE: "false"
+  SMTP_FROM: "Tasks <josh@joshuascutts.com>"
+  SMTP_NAME: "tasks.joshuascutts.com"
 
   # If your image has the RDS bundle baked in, you can also add:
   # NODE_EXTRA_CA_CERTS: /app/certs/rds-global-bundle.pem
@@ -64,15 +82,7 @@ secrets:
 # Persist uploads so avatars/backgrounds/attachments survive new tasks
 storage:
   volumes:
-    avatars:
-      path: /app/public/user-avatars
-      read_only: false
-      efs: true
-    project-backgrounds:
-      path: /app/public/project-background-images
-      read_only: false
-      efs: true
-    attachments:
-      path: /app/private/attachments
+    data:
+      path: /data
       read_only: false
       efs: true
