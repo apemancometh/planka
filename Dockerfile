@@ -23,7 +23,8 @@ RUN npm ci \
  && npm ci --prefix client
 
 # Bring in the rest of the source
-# Cache bust: 2025-11-14-17:10
+# Force cache invalidation
+RUN echo "Build timestamp: 2025-11-14T17:30:00Z"
 COPY . .
 
 # Build client bundle
