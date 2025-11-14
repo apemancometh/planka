@@ -12,6 +12,8 @@
  */
 
 module.exports = {
+  tableName: 'api_key',
+
   attributes: {
     //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
